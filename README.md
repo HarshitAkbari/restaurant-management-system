@@ -1,67 +1,123 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Restaurant Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Petpooja-style restaurant management platform built on **Laravel 10** with the GetSkills admin theme as the UI shell. Restaurant features will be developed incrementally under `/admin` and `/pos`.
 
-## About Laravel
+## Prerequisites
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (with WSL2 backend on Windows)
+- Git
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+All PHP, Composer, Node, and Artisan commands run inside Laravel Sail containers — no local PHP installation required.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## First-Time Setup
 
-## Learning Laravel
+```bash
+# Clone the repository, then:
+cp .env.example .env
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# Start Docker containers (first run downloads images; may take several minutes)
+./vendor/bin/sail up -d
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+# Generate application key (skip if already set in .env)
+./vendor/bin/sail artisan key:generate
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Run database migrations
+./vendor/bin/sail artisan migrate
 
-## Laravel Sponsors
+# Optional: compile frontend assets with Vite
+./vendor/bin/sail npm run dev
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Open the app at **http://localhost:8080**. The GetSkills theme demo dashboard is served at `/`.
 
-### Premium Partners
+> If port 8080 is in use, change `APP_PORT` in `.env` and run `docker compose up -d` again.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Service URLs
 
-## Contributing
+| Service   | URL                        |
+|-----------|----------------------------|
+| App       | http://localhost:8080      |
+| Mailpit   | http://localhost:8025      |
+| MySQL     | localhost:3307             |
+| Redis     | localhost:6379             |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Common Sail Commands
 
-## Code of Conduct
+```bash
+./vendor/bin/sail up -d          # Start containers in background
+./vendor/bin/sail down           # Stop containers
+./vendor/bin/sail artisan ...    # Run Artisan commands
+./vendor/bin/sail composer ...   # Run Composer commands
+./vendor/bin/sail npm ...        # Run npm commands
+./vendor/bin/sail test           # Run PHPUnit tests
+./vendor/bin/sail shell          # Open a shell in the app container
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+On Windows you can also use `vendor\bin\sail` from PowerShell or Git Bash.
 
-## Security Vulnerabilities
+**Windows note:** Run Sail from **WSL2** (recommended) or use `docker compose` directly from Git Bash/PowerShell. The `./vendor/bin/sail` script does not support MINGW/Git Bash natively — use WSL or the `docker compose` commands below as an alternative:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker compose up -d
+docker compose exec laravel.test php artisan migrate
+docker compose exec laravel.test php artisan test
+```
+
+## Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   ├── Admin/          # Back-office: menu, inventory, reports, settings
+│   │   ├── Pos/            # POS: billing, tables, KOT
+│   │   └── Api/V1/         # REST API for mobile & integrations
+│   ├── Requests/           # Form request validation
+│   └── Resources/          # API transformers
+├── Services/               # Business logic layer
+├── Repositories/
+│   ├── Contracts/          # Repository interfaces
+│   └── Eloquent/             # Eloquent implementations
+├── Enums/                  # Status enums, payment methods, etc.
+└── Support/                # Shared helpers
+
+routes/
+├── web.php                 # GetSkills theme demo routes (unchanged)
+├── admin.php               # Restaurant admin routes  → /admin/*
+├── pos.php                 # POS routes               → /pos/*
+└── api.php                 # API routes               → /api/*
+
+resources/views/
+├── getskills/              # Theme demo views (reference UI)
+├── layout/                 # Theme layouts
+└── restaurant/             # Future restaurant-specific views
+    ├── admin/
+    ├── pos/
+    └── components/
+
+config/restaurant.php       # App-level restaurant settings (currency, timezone)
+```
+
+## Route Conventions
+
+- **Theme demos** — existing URLs (`/`, `/courses`, `/ecom-*`, etc.) remain unchanged for UI reference.
+- **Admin module** — new back-office features go under `/admin` (see `routes/admin.php`).
+- **POS module** — in-restaurant operations go under `/pos` (see `routes/pos.php`).
+- **API** — versioned endpoints will live under `/api/v1` (placeholder in `routes/api.php`).
+
+## Environment Variables
+
+Key variables in `.env`:
+
+| Variable              | Default                  | Description              |
+|-----------------------|--------------------------|--------------------------|
+| `APP_NAME`            | Restaurant Management System | Application name     |
+| `DB_DATABASE`         | restaurant_management    | MySQL database name      |
+| `RESTAURANT_CURRENCY` | INR                      | Default currency         |
+| `RESTAURANT_TIMEZONE` | Asia/Kolkata             | Restaurant timezone      |
+
+Sail sets `DB_HOST=mysql`, `REDIS_HOST=redis`, and `MAIL_HOST=mailpit` automatically.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# restaurant-management-system
+MIT
