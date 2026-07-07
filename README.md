@@ -59,8 +59,8 @@ On Windows you can also use `vendor\bin\sail` from PowerShell or Git Bash.
 
 ```bash
 docker compose up -d
-docker compose exec laravel.test php artisan migrate
-docker compose exec laravel.test php artisan test
+docker compose exec app php artisan migrate
+docker compose exec app php artisan test
 ```
 
 ## Project Structure
@@ -117,6 +117,18 @@ Key variables in `.env`:
 | `RESTAURANT_TIMEZONE` | Asia/Kolkata             | Restaurant timezone      |
 
 Sail sets `DB_HOST=mysql`, `REDIS_HOST=redis`, and `MAIL_HOST=mailpit` automatically.
+
+## Documentation
+
+Product and API specifications for the Petpooja-style RMS:
+
+| Document | Description |
+|----------|-------------|
+| [plans/prd-restaurant-management-system.md](plans/prd-restaurant-management-system.md) | Master PRD — vision, roles, data schemas, functional requirements, phased roadmap |
+| [plans/menus-and-navigation.md](plans/menus-and-navigation.md) | Admin sidebar, POS navigation, routes, and role-based access matrix |
+| [docs/api.md](docs/api.md) | Master API reference — all planned `/api/v1` endpoints by phase |
+
+Per-endpoint Postman docs will be added under `docs/{feature}/` as APIs are implemented.
 
 ## License
 
