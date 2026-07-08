@@ -18,7 +18,9 @@
   - [Inventory](#inventory-endpoints) *(Phase 2)*
   - [Customers](#customer-endpoints) *(Phase 2)*
   - [Reports](#report-endpoints) *(Phase 2)*
+  - [Expenses](#expense-endpoints) *(Phase 2 — Admin web primarily)*
   - [Online Ordering](#online-ordering-endpoints) *(Phase 3)*
+  - [Loyalty & Outlets](#loyalty--outlets) *(Phase 3 — Admin web primarily)*
 
 ---
 
@@ -1138,6 +1140,23 @@ Valid transitions: `draft` → `confirmed` → `preparing` → `ready` → `serv
 **Query Parameters:** `from_date`, `to_date`
 
 **Success Response (200):** Tax breakdown by rate (CGST, SGST, IGST as applicable)
+
+---
+
+## Expense Endpoints
+
+*Phase 2 — primarily Admin web (`/admin/expenses`). API exposure can mirror Admin later.*
+
+Expense list, categories, and petty-cash style posting are implemented in the Admin UI via Service → Repository.
+
+---
+
+## Loyalty & Outlets
+
+*Phase 3 — Admin web*
+
+- Loyalty settings: `/admin/customers/loyalty`
+- Outlets CRUD: `/admin/settings/outlets` (single-outlet MVP still creates one primary outlet)
 
 ---
 

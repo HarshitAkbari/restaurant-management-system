@@ -22,6 +22,7 @@ flowchart TB
         Staff[Staff]
         Customers[Customers]
         Reports[Reports]
+        Expenses[Expenses]
         Settings[Settings]
     end
 
@@ -59,6 +60,7 @@ flowchart TD
     Root --> StaffMenu[Staff]
     Root --> CustomersMenu[Customers]
     Root --> ReportsMenu[Reports]
+    Root --> ExpensesMenu[Expenses]
     Root --> SettingsMenu[Settings]
 
     OrdersMenu --> LiveOrders["Live Orders /admin/orders"]
@@ -92,6 +94,9 @@ flowchart TD
     ReportsMenu --> TaxReport["Tax and GST /admin/reports/tax"]
     ReportsMenu --> StaffReport["Staff /admin/reports/staff"]
     ReportsMenu --> InventoryReport["Inventory /admin/reports/inventory"]
+
+    ExpensesMenu --> ExpenseList["Expense List /admin/expenses"]
+    ExpensesMenu --> ExpenseCategories["Categories /admin/expenses/categories"]
 
     SettingsMenu --> Profile["Restaurant Profile /admin/settings/profile"]
     SettingsMenu --> TaxSettings["Tax Settings /admin/settings/tax"]
@@ -130,6 +135,8 @@ flowchart TD
 | Reports | Tax/GST | `/admin/reports/tax` | `admin.reports.tax` | Owner, Manager | 2 |
 | Reports | Staff | `/admin/reports/staff` | `admin.reports.staff` | Owner, Manager | 2 |
 | Reports | Inventory | `/admin/reports/inventory` | `admin.reports.inventory` | Owner, Manager | 2 |
+| Expenses | Expense list | `/admin/expenses` | `admin.expenses.index` | Owner, Manager | 2 |
+| Expenses | Categories | `/admin/expenses/categories` | `admin.expenses.categories.index` | Owner, Manager | 2 |
 | Settings | Restaurant profile | `/admin/settings/profile` | `admin.settings.profile` | Owner | 1 |
 | Settings | Tax settings | `/admin/settings/tax` | `admin.settings.tax` | Owner | 1 |
 | Settings | Payment methods | `/admin/settings/payments` | `admin.settings.payments` | Owner, Manager | 1 |
@@ -217,6 +224,13 @@ GET    /admin/reports/tax                  - Tax report
 GET    /admin/reports/staff                - Staff report
 GET    /admin/reports/inventory            - Inventory report
 GET    /admin/reports/export               - CSV export
+
+GET    /admin/expenses                     - Expense list
+POST   /admin/expenses                     - Create expense
+PUT    /admin/expenses/{id}                - Update expense
+DELETE /admin/expenses/{id}                - Delete expense
+GET    /admin/expenses/categories          - Expense categories
+POST   /admin/expenses/categories          - Create category
 ```
 
 #### Phase 3
@@ -225,6 +239,7 @@ GET    /admin/reports/export               - CSV export
 GET    /admin/settings/outlets             - Outlet list
 POST   /admin/settings/outlets             - Create outlet
 GET    /admin/customers/loyalty            - Loyalty program settings
+GET    /admin/online-orders                - Online / aggregator order inbox
 ```
 
 ---
@@ -304,6 +319,7 @@ Legend: **R** = Read, **W** = Read + Write, **—** = No access
 | Staff — Roles | W | — | — | — | — |
 | Customers | W | W | — | — | — |
 | Reports | R | R | — | — | — |
+| Expenses | W | W | — | — | — |
 | Settings — Profile/Tax | W | — | — | — | — |
 | Settings — Payments/Printers | W | W | — | — | — |
 | Settings — Outlets | W | — | — | — | — |
